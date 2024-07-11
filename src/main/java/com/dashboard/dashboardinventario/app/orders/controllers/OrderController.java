@@ -44,21 +44,9 @@ public class OrderController {
         }
     }
 
-    // @PutMapping()
-    // public ResponseEntity<?> update(@RequestBody dto) {
-    // try {
-    // //TODO Implement Your Logic To Update Data And Return Result Through
-    // ResponseEntity
-    // return new ResponseEntity<>("Update Result", HttpStatus.OK);
-    // } catch (Exception e) {
-    // return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-    // }
-    // }
-
     // @DeleteMapping("/{id}")
     // public ResponseEntity<?> delete(@PathVariable Integer id) {
     // try {
-    // //TODO Implement Your Logic To Destroy Data And Return Result Through
     // ResponseEntity
     // return new ResponseEntity<>("Destroy Result", HttpStatus.OK);
     // } catch (Exception e) {
