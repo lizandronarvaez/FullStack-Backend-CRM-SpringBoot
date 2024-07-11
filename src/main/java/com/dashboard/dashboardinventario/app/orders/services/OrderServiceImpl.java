@@ -6,7 +6,10 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.springframework.http.HttpStatus;
+import com.dashboard.dashboardinventario.app.clients.models.entities.ClientEntity;
+import com.dashboard.dashboardinventario.app.clients.repository.ClientsRepository;
+import com.dashboard.dashboardinventario.app.orders.controllers.OrderResponse;
 import com.dashboard.dashboardinventario.app.orders.models.dto.OrderDto;
 import com.dashboard.dashboardinventario.app.orders.models.entities.OrderEntity;
 import com.dashboard.dashboardinventario.app.orders.models.entities.OrderItemEntity;
@@ -20,6 +23,7 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
+    private final ClientsRepository clientsRepository;
 
     @Transactional
     @Override
@@ -34,12 +38,9 @@ public class OrderServiceImpl implements OrderService {
 
         // Guardar la orden principal para obtener el ID generado
         OrderEntity saveOrderEntity = orderRepository.save(orderEntity);
-        // Obtener el ID de la orden principal
-        Integer orderId = orderEntity.getId();
         // Obtener la lista de productos
         List<OrderItemEntity> orderDetails = new ArrayList<>();
         orderDto.getOrder().forEach(product -> {
-            System.out.println("Datos de cada producto: " + product);
             Optional<OrderItemEntity> existingOrderItem = orderItemRepository.findById(product.getId());
             if (existingOrderItem.isEmpty()) {
                 // Crear un detalle de pedido
@@ -50,8 +51,6 @@ public class OrderServiceImpl implements OrderService {
                         .quantity(product.getQuantity())
                         .price(product.getPrice())
                         .build();
-
-                System.out.println("DATOS DE CADA ORDERN ENTITY DESPUES DE CREARLA:" + orderItemEntity);
                 orderDetails.add(orderItemEntity);
             } else {
                 OrderItemEntity existingOrder = existingOrderItem.get();
@@ -61,26 +60,40 @@ public class OrderServiceImpl implements OrderService {
 
         // Guardar los detalles de la orden en la base de datos
         orderItemRepository.saveAll(orderDetails);
-
         // Asignar los detalles de la orden a la orden principal
         orderEntity.setDetails(orderDetails);
-
         // Actualizar la orden principal en la base de datos para incluir los detalles
         orderRepository.save(orderEntity);
-
         return orderEntity;
     }
 
+    // Obtener todas las ordenes
     @Transactional(readOnly = true)
     @Override
     public List<OrderEntity> getAllOrders() {
         return (List<OrderEntity>) orderRepository.findAll();
     }
 
+    // Obtener las ordenes por el id del usuario
     @Transactional(readOnly = true)
     @Override
-    public OrderEntity getOrderById(Integer id) {
-        return orderRepository.findById(id).orElse(null);
+    public OrderResponse getOrderById(Integer id) {
+        Optional<ClientEntity> clientEntity = clientsRepository.findById(id);
+        List<OrderEntity> listOrderClient = orderRepository.findOrderByIdClient(clientEntity.get());
+
+        if (listOrderClient.isEmpty()) {
+            return OrderResponse
+                    .builder()
+                    .status(HttpStatus.NOT_FOUND.value())
+                    .orderList(listOrderClient)
+                    .message("El cliente no tiene pedidos realizados")
+                    .build();
+        }
+        return OrderResponse
+                .builder()
+                .status(HttpStatus.OK.value())
+                .message("Pedidos de el cliente")
+                .orderList(listOrderClient).build();
     }
 
 }
