@@ -25,6 +25,7 @@ com/dashboard/dashboardinventario/app/orders/models/entities/OrderEntity$OrderEn
 com/dashboard/dashboardinventario/security/auth/models/dto/UserDto.class
 com/dashboard/dashboardinventario/app/orders/services/OrderService.class
 com/dashboard/dashboardinventario/security/auth/validation/EmailNotFoundException.class
+com/dashboard/dashboardinventario/app/orders/controllers/OrderResponse$OrderResponseBuilder.class
 com/dashboard/dashboardinventario/app/products/services/ICategoryService.class
 com/dashboard/dashboardinventario/app/orders/models/dto/OrderItemDTO.class
 com/dashboard/dashboardinventario/app/clients/models/dto/ClientDto.class
@@ -43,6 +44,7 @@ com/dashboard/dashboardinventario/security/auth/services/AuthServiceImpl.class
 com/dashboard/dashboardinventario/app/products/controllers/AuthResponse.class
 com/dashboard/dashboardinventario/app/clients/validation/NoFoundException.class
 com/dashboard/dashboardinventario/app/clients/services/IClientService.class
+com/dashboard/dashboardinventario/app/orders/controllers/OrderResponse.class
 com/dashboard/dashboardinventario/app/products/controllers/CategorieController.class
 com/dashboard/dashboardinventario/app/clients/controllers/AuthResponse$AuthResponseBuilder.class
 com/dashboard/dashboardinventario/security/auth/controllers/AuthController.class
